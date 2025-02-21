@@ -62,3 +62,45 @@ WHERE RegistrationDate > '2020-01-01';
 SELECT * FROM Products
 ORDER BY Price DESC
 LIMIT 3;
+
+--Orders with customer names and product details
+SELECT 
+Orders.OrderID,
+Customers.FirstName,
+Customers.LastName,
+Products.ProductName,
+Orders.Quantity,
+Orders.OrderDate
+FROM Orders
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+JOIN Products ON Orders.ProductID = Products.ProductID;
+--Total amount spent by each customer
+SELECT 
+Customers.CustomerID,
+Customers.FirstName,
+Customers.LastName,
+SUM(Orders.Quantity * Products.Price) AS TotalAmountSpent
+FROM Orders
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+JOIN Products ON Orders.ProductID = Products.ProductID
+GROUP BY Customers.CustomerID, Customers.FirstName, Customers.LastName;
+--Number of orders placed by each customer
+SELECT 
+Customers.CustomerID,
+Customers.FirstName,
+Customers.LastName,
+COUNT(Orders.OrderID) AS TotalOrders
+FROM Orders
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+GROUP BY Customers.CustomerID, Customers.FirstName, Customers.LastName;
+--Total sales for each product
+SELECT 
+Products.ProductID,
+Products.ProductName,
+SUM(Orders.Quantity) AS TotalUnitsSold,
+SUM(Orders.Quantity * Products.Price) AS TotalSales
+FROM Orders
+JOIN Products ON Orders.ProductID = Products.ProductID
+GROUP BY Products.ProductID, Products.ProductName;
+
+
